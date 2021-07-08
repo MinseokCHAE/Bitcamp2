@@ -12,7 +12,7 @@ model.add(Dense(1, input_dim=1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x, y, epochs=100000, batch_size=1)
+model.fit(x, y, epochs=10000, batch_size=1)
 
 #4. 평가,예측
 loss = model.evaluate(x, y)
