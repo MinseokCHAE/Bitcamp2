@@ -24,14 +24,14 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_
 model = Sequential()
 model.add(Dense(1, input_dim=1))
 model.add(Dense(11))
-model.add(Dense(12))
-model.add(Dense(13))
-model.add(Dense(14))
+model.add(Dense(11))
+model.add(Dense(11))
+model.add(Dense(11))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=101, batch_size=1)
+model.fit(x_train[-1:], y_train[-1:], epochs=101, batch_size=1)
 
 #4. 평가,예측
 loss = model.evaluate(x_test, y_test)

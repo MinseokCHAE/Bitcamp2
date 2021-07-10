@@ -13,26 +13,32 @@ x_pred = [6]
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(21, input_dim=1))
+model.add(Dense(1, input_dim=1))
+model.add(Dense(21))
+model.add(Dense(39))
+model.add(Dense(60))
+model.add(Dense(18))
 model.add(Dense(1))
 
 #3. 컴파일,훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x, y, epochs=892, batch_size=1)
+model.fit(x, y, epochs=678, batch_size=16)
 
 #4. 평가,예측
 loss = model.evaluate(x, y)
 result = model.predict([6])
 y_predict = model.predict(x)
 
-print('loss : ', loss)
-print('result : ', result)
+print('loss = ', loss)
+print('result = ', result)
 
 from sklearn.metrics import r2_score
 r2 = r2_score(y, y_predict)
 print('r2 score = ', r2)
 
 '''
-epochs = 
-
+epochs = 892
+loss =  0.37999972701072693
+result =  [[5.7000012]]
+r2 score =  0.8100001335142224
 '''
