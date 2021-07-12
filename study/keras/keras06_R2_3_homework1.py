@@ -46,6 +46,8 @@ r2 = r2_score(y_test, y_predict)
 print('r2 score = ', r2)
 
 '''
-epochs = 
-
+epochs = 101
+loss =  0.20065012574195862
+result =  [[100.792854]]
+r2 score =  0.9997214980704084
 '''
