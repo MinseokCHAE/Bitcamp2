@@ -23,17 +23,18 @@ print(diabets.DESCR)
 
 #2. 모델링
 model = Sequential()
-model.add(Dense(21, input_dim=10, activation='relu'))
-model.add(Dense(18, activation='relu')) 
-model.add(Dense(60, activation='relu'))
-model.add(Dense(39, activation='relu'))
-model.add(Dense(21, activation='relu'))
-model.add(Dense(18, activation='relu'))
+model.add(Dense(4, input_dim=10, activation='relu'))
+model.add(Dense(8, activation='relu')) 
+model.add(Dense(16, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(4, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=123, batch_size=31, validation_split=0.03)
+model.fit(x_train, y_train, epochs=100, batch_size=16, validation_split=0.05)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -44,7 +45,7 @@ print('loss = ', loss)
 print('r2 score = ', r2)
 
 '''
-random_state = 9, epochs = 123, batch_size = 21
-loss =  2114.74560546875
-r2 score =  0.617328805075021
+epochs = 100, batch_size = 16
+loss =  2064.8046875
+r2 score =  0.6263657834047769
 '''
