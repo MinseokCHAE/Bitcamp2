@@ -132,6 +132,6 @@ print('loss = ', results[0])
 #print('r2 score =', r2)
 
 '''
-epochs = 100
+epochs = 100s
 loss =  112.97917175292969
 '''

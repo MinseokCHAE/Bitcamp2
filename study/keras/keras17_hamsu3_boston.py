@@ -9,7 +9,7 @@ import numpy as np
 boston = load_boston()
 x = boston.data
 y = boston.target
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=5) 
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=9) 
 
 '''
 print(boston)
@@ -32,15 +32,6 @@ output1 = Dense(1)(dense6)
 
 model = Model(Inputs=input1, Outputs=output1)
 model.summary()
-
-# model = Sequential()
-# model.add(Dense(11, input_dim=13))
-# model.add(Dense(13))
-# model.add(Dense(15))
-# model.add(Dense(17))
-# model.add(Dense(19))
-# model.add(Dense(21))
-# model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
