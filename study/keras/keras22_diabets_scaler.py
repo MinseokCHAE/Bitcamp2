@@ -11,23 +11,23 @@ import pandas as pd
 diabets = load_diabetes()
 x = diabets.data
 y = diabets.target
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=66)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=66)
 
 # scaler = MaxAbsScaler()
-# scaler = RobustScaler()
+scaler = RobustScaler()
 # scaler = QuantileTransformer()
-scaler = PowerTransformer()
+# scaler = PowerTransformer()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델링
 input = Input(shape=(10, ))
-x = Dense(128, activation='relu')(input)
+x = Dense(16, activation='relu')(input)
 x = Dense(64, activation='relu')(x)
 x = Dense(32, activation='relu')(x)
-x = Dense(64, activation='relu')(x)
 x = Dense(16, activation='relu')(x)
+x = Dense(8, activation='relu')(x)
 x = Dense(4, activation='relu')(x)
 output = Dense(1)(x)
 
@@ -36,7 +36,7 @@ model = Model(inputs=input, outputs=output)
 #3. 컴파일, 훈련
 num_epochs = 100
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=num_epochs, batch_size=16, validation_split=0.05)
+model.fit(x_train, y_train, epochs=num_epochs, batch_size=8)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -65,6 +65,6 @@ r2 score =  0.5001783144633074
 
 PowerTransformer
 epochs =  100
-loss =  5418.078125
-r2 score =  0.13037617789182188
+loss =  3622.23779296875
+r2 score =  0.44187743910803245
 '''
