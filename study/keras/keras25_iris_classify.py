@@ -59,15 +59,30 @@ model.fit(x_train, y_train, epochs=num_epochs, batch_size=8,
 
 #4. evaluating, prediction
 loss = model.evaluate(x_test, y_test)
+y_predict = model.predict(x_test[:5])
 
 print('epochs = ', num_epochs)
 print('loss = ', loss[0])
 print('mse = ', loss[1])
 print('accuracy = ', loss[2])
 
+print(y_test[:5])
+print(y_predict)
+
 '''
 epochs =  100
 loss =  0.08512041717767715
 mse =  0.016447804868221283
 accuracy =  0.9666666388511658
+
+[[0. 1. 0.]
+ [0. 1. 0.]
+ [0. 1. 0.]
+ [1. 0. 0.]
+ [0. 1. 0.]]
+[[9.30347771e-04 9.96776760e-01 2.29283888e-03]
+ [3.46159068e-04 9.87790823e-01 1.18630165e-02]
+ [4.19381598e-04 9.72085595e-01 2.74949633e-02]
+ [9.99824703e-01 1.75249239e-04 9.49099288e-08]
+ [5.59110194e-04 9.96452332e-01 2.98855011e-03]]
 '''
