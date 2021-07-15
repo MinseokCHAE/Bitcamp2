@@ -51,19 +51,15 @@ model.fit(x_train, y_train, epochs=num_epochs, batch_size=8,
 
 #4. 평가,예측
 loss = model.evaluate(x_test, y_test)
-y_predict = model.predict(x_test)
-r2 = r2_score(y_test, y_predict)
 
 print('epochs = ', num_epochs)
 print('loss = ', loss[0])
 print('mse = ', loss[1])
 print('accuracy = ', loss[2])
-print('r2 score = ', r2)
 
 '''
 epochs =  100
 loss =  0.3202535808086395
 mse =  0.038858525454998016
 accuracy =  0.9561403393745422
-r2 score =  0.8312711562332203
 '''
