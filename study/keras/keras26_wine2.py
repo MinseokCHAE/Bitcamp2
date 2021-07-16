@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.callbacks import EarlyStopping
@@ -32,9 +32,9 @@ onehot_encoder.fit(y)
 y = onehot_encoder.transform(y).toarray() 
 # print(y.shape) # (4898, 7)
 
-rs = 47
+rs = 77
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.01, random_state=rs)
-scaler = RobustScaler()
+scaler = QuantileTransformer()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -74,14 +74,20 @@ mse =  0.08134270459413528
 accuracy =  0.6816326379776001
 
 scaler =  RobustScaler()
-rs = 77
-loss =  1.4346696138381958
-mse =  0.06356646120548248
-accuracy =  0.7346938848495483
-
-scaler =  RobustScaler()
 rs =  47
 loss =  2.288007974624634
 mse =  0.05812676623463631
 accuracy =  0.7755101919174194
+
+scaler =  QuantileTransformer()
+rs =  47
+loss =  1.7584642171859741
+mse =  0.05944771692156792
+accuracy =  0.7346938848495483
+
+scaler =  QuantileTransformer()
+rs =  77
+loss =  1.699642300605774
+mse =  0.06264209002256393
+accuracy =  0.7551020383834839
 '''
