@@ -24,9 +24,9 @@ y_test = to_categorical(y_test)
 
 #2. modeling
 input = Input(shape=(32, 32, 3))
-x = Conv2D(32, (3,3), padding='same', activation='relu')(input)
+x = Conv2D(64, (3,3), activation='relu')(input)
 x = MaxPooling2D((2,2))(x)
-x = Conv2D(64, (3,3), activation='relu')(x)
+x = Conv2D(32, (3,3), activation='relu')(x)
 x = MaxPooling2D((2,2))(x)
 x = Conv2D(64, (3,3), activation='relu')(x)
 x = Flatten()(x)
@@ -36,11 +36,11 @@ output = Dense(100, activation='softmax')(x)
 model = Model(inputs=input, outputs=output)
 
 #3. compiling, training
-es = EarlyStopping(monitor='val_loss', patience=5, mode='min', verbose=1)
+es = EarlyStopping(monitor='val_loss', patience=21, mode='min', verbose=1)
 model.compile(loss='categorical_crossentropy', optimizer='adam', 
                         metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=21, batch_size=256, 
-                                validation_split=0.001, callbacks=[es])
+model.fit(x_train, y_train, epochs=21, batch_size=128, 
+                            validation_split=0.001, callbacks=[es])
 
 #4. evaluating, prediction
 loss = model.evaluate(x_test, y_test)
