@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer, OneHotEncoder
 from sklearn.datasets import load_boston
@@ -24,8 +25,8 @@ x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 
 #2. modeling
 input = Input(shape=(13, 1))
-x = Conv1D(64, (1,), activation='relu')(input)
-x = Conv1D(128, (1,), activation='relu')(x)
+x = Conv1D(64, (2,), activation='relu')(input)
+x = Conv1D(128, (2,), activation='relu')(x)
 x = MaxPooling1D()(x)
 x = Conv1D(128, (1,), activation='relu')(x)
 x = Conv1D(256, (1,), activation='relu')(x)
@@ -39,8 +40,7 @@ model = Model(inputs=input, outputs=output)
 
 #3. compiling, training
 es = EarlyStopping(monitor='val_loss', patience=32, mode='min', verbose=1)
-model.compile(loss='categorical_crossentropy', optimizer='adam', 
-                        metrics=['acc'])
+model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
 hist = model.fit(x_train, y_train, epochs=128, batch_size=16, 
                             validation_split=0.05, callbacks=[es])
@@ -48,37 +48,15 @@ end_time = time.time() - start_time
 
 #4. evaluating, prediction
 loss = model.evaluate(x_test, y_test, batch_size=64)
+y_predict = model.predict([x_test])
+r2 = r2_score(y_test, y_predict)
 
-print('loss = ', loss[0])
-print('accuracy = ', loss[1])
+print('loss = ', loss)
+print('R2 score = ', r2)
 print('time taken(s) : ', end_time)
 
-#5. plt visualization
-import matplotlib.pyplot as plt
-plt.figure(figsize=(9,5))
-
-plt.subplot(2,1,1)
-plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
-plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
-plt.grid()
-plt.title('loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(loc='upper right')
-
-plt.subplot(2,1,2)
-plt.plot(hist.history['acc'])
-plt.plot(hist.history['val_acc'])
-plt.grid()
-plt.title('acc')
-plt.ylabel('acc')
-plt.xlabel('epoch')
-plt.legend(['acc', 'val_acc'])
-
-plt.show()
-
 '''
-loss =  nan
-accuracy =  0.0
-time taken(s) :  7.862398386001587
+loss =  14.211403846740723
+R2 score =  0.8299724283520478
+time taken(s) :  21.58746075630188
 '''

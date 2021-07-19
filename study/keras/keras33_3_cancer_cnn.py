@@ -39,7 +39,7 @@ model = Model(inputs=input, outputs=output)
 
 #3. compiling, training
 es = EarlyStopping(monitor='val_loss', patience=32, mode='min', verbose=1)
-model.compile(loss='categorical_crossentropy', optimizer='adam', 
+model.compile(loss='binary_crossentropy', optimizer='adam', 
                         metrics=['acc'])
 start_time = time.time()
 hist = model.fit(x_train, y_train, epochs=128, batch_size=16, 
@@ -78,7 +78,7 @@ plt.legend(['acc', 'val_acc'])
 plt.show()
 
 '''
-loss =  0.0
-accuracy =  0.359649121761322
-time taken(s) :  8.43798303604126
+loss =  0.3412402272224426
+accuracy =  0.9473684430122375
+time taken(s) :  26.185552835464478
 '''

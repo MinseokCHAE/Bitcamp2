@@ -87,7 +87,7 @@ plt.legend(['acc', 'val_acc'])
 plt.show()
 
 '''
-loss =  0.014932092279195786
-accuracy =  1.0
-time taken(s) :  11.242970705032349
+loss =  0.12640994787216187
+accuracy =  0.9722222089767456
+time taken(s) :  11.268682479858398
 '''
