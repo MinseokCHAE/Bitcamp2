@@ -1,6 +1,6 @@
 import numpy as np
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, SimpleRNN, Dropout, LSTM
+from tensorflow.keras.layers import Dense, Input, SimpleRNN, Dropout, LSTM, GRU
 
 
 #1. Data Preprocessing
@@ -11,7 +11,7 @@ x = x.reshape(4, 3, 1) # rnn input_dim =3, [batch_size, timesteps, feature]
 
 #2. Modeling
 input = Input(shape=(3, 1))
-s = LSTM(16, activation='relu')(input)
+s = GRU(16, activation='relu')(input)
 s = Dropout(0.1)(s)
 s = Dense(16, activation='relu')(s)
 s = Dropout(0.1)(s)
@@ -28,7 +28,7 @@ Layer (type)                 Output Shape              Param #
 =================================================================        
 input_1 (InputLayer)         [(None, 3, 1)]            0
 _________________________________________________________________        
-lstm (LSTM)                  (None, 16)                1152 = 4 * 16 * ( 16 + 1 + 1 )
+gru (GRU)                    (None, 16)                912 = 3 * 16 * ( 16 + 1 + 2 )
 _________________________________________________________________        
 dropout (Dropout)            (None, 16)                0
 _________________________________________________________________        
@@ -42,8 +42,8 @@ dropout_2 (Dropout)          (None, 8)                 0
 _________________________________________________________________        
 dense_2 (Dense)              (None, 1)                 9
 =================================================================        
-Total params: 1,569
-Trainable params: 1,569
+Total params: 1,329
+Trainable params: 1,329
 Non-trainable params: 0
 '''
 
