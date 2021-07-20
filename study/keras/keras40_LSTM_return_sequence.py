@@ -12,18 +12,17 @@ x = x.reshape(x.shape[0], x.shape[1], 1)
 
 #2. Modeling
 input = Input(shape=(3, 1))
-s = LSTM(32, activation='relu')(input)
-s = Dense(32, activation='relu')(s)
-s = Dense(16,  activation='relu')(s)
-s = Dense(16, activation='relu')(s)
-s = Dense(8, activation='relu')(s)
+s = LSTM(8, activation='relu', return_sequences=True)(input)
+# return_sequences=True -> LSTM 연결(데이터의 열에 해당하는 timesteps 보존), default=False
+s = LSTM(8, activation='relu')(s)
+s = Dense(4,  activation='relu')(s)
 output = Dense(1, activation='relu')(s)
 
 model = Model(inputs=input, outputs=output)
 
 #3. Compiling, Training
 model.compile(loss='mse', optimizer='adam')
-model.fit(x, y, epochs=128, batch_size=1)
+model.fit(x, y, epochs=64, batch_size=1)
 
 #. Evaluating, Prediction
 loss = model.evaluate(x, y)
@@ -33,6 +32,6 @@ print('loss : ', loss)
 print('pred : ', result)
 
 '''
-loss :  0.2368205487728119
-pred :  [[79.93767]]
+loss :  1.1481196880340576
+pred :  [[67.14131]]
 '''
