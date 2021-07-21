@@ -11,8 +11,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 #1. Data Preprocessing
 x_data = np.array(range(1, 101))
-x_pred = np.array(range(96, 105))
-size = 6
+x_pred = np.array(range(96, 106))
 
 def split_x(dataset, size):
     aaa = []
@@ -20,25 +19,20 @@ def split_x(dataset, size):
         subset = dataset[i : (i + size)]
         aaa.append(subset)
     return np.array(aaa)
-dataset = split_x(x_data, size)
-predset = split_x(x_pred, size)
+dataset = split_x(x_data, 6)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
-x_pred = predset[:, :5] # (4, 5)
-# print(x_pred)
-'''
-[[ 96  97  98  99 100]
- [ 97  98  99 100 101]
- [ 98  99 100 101 102]
- [ 99 100 101 102 103]]
- '''
+# print(x.shape, y.shape)
+x_pred = split_x(x_pred, 5) # (6, 5)
+# print(x_pred, x_pred.shape)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=66) 
 scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
+x_pred = scaler.transform(x_pred)
 
 #2. Modeling
 input = Input(shape=(5, ))
@@ -74,12 +68,14 @@ print('pred : ', result)
 print('time taken(s) : ', end_time)
 
 '''
-mse :  0.07902862131595612
-rmse :  0.2811202913985828
-R2 score =  0.9998725401814627
-pred :  [[9107.073]
- [9200.205]
- [9293.337]
- [9386.468]]
-time taken(s) :  5.0726518630981445
+mse :  0.009874691255390644
+rmse :  0.09937148092829724
+R2 score =  0.9999840737902377
+pred :  [[100.87283 ]
+ [101.86908 ]
+ [102.865326]
+ [103.86157 ]
+ [104.857834]
+ [105.85405 ]]
+time taken(s) :  5.033863067626953
 '''

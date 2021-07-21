@@ -2,7 +2,7 @@
 import time
 import numpy as np
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input, SimpleRNN, Dropout, LSTM, GRU
+from tensorflow.keras.layers import Dense, Input, SimpleRNN, Dropout, LSTM, GRU, Conv1D, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer, OneHotEncoder
@@ -20,33 +20,29 @@ def split_x(dataset, size):
         aaa.append(subset)
     return np.array(aaa)
 dataset = split_x(x_data, 6)
-predset = split_x(x_pred, 5)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
-print(x, y)
 # print(x.shape, y.shape)
-x_pred = predset[:, :-1] # (4, 5)
+x_pred = split_x(x_pred, 5) # (6, 5)
 # print(x_pred, x_pred.shape)
-'''
-[[ 96  97  98  99 100]
- [ 97  98  99 100 101]
- [ 98  99 100 101 102]
- [ 99 100 101 102 103]]
- '''
-'''
+
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=66) 
 scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
+x_pred = scaler.transform(x_pred)
 x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
 x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 x_pred = x_pred.reshape(x_pred.shape[0], x_pred.shape[1], 1)
 
 #2. Modeling
 input = Input(shape=(5, 1))
-s = LSTM(16, activation='relu')(input)
+s = Conv1D(16, 2, activation='relu')(input)
+# s = LSTM(16)(s) # LSTM하면 flatten 필요X
+# return_sequences=True 로 conv 연결가능
+s = Flatten()(s)
 s = Dense(64, activation='relu')(s)
 s = Dense(32, activation='relu')(s)
 s = Dense(8, activation='relu')(s)
@@ -56,7 +52,7 @@ output = Dense(1, activation='relu')(s)
 model = Model(inputs=input, outputs=output)
 
 #3. Compiling, Training
-es = EarlyStopping(monitor='val_loss', patience=32, mode='min', verbose=1)
+es = EarlyStopping(monitor='val_loss', patience=64, mode='min', verbose=1)
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
 model.fit(x_train, y_train, epochs=128, batch_size=16, validation_split=0.05, callbacks=[es])
@@ -77,13 +73,15 @@ print('R2 score = ', r2)
 print('pred : ', result)
 print('time taken(s) : ', end_time)
 
-
-mse :  1.4399133920669556
-rmse :  1.1999639296316864
-R2 score =  0.9976776627391208
-pred :  [[54016.992]
- [54569.36 ]
- [55121.8  ]
- [55674.332]]
-time taken(s) :  13.35883092880249
+'''
+mse :  0.5144292116165161
+rmse :  0.7172371922877361
+R2 score =  0.999170312569404
+pred :  [[103.60905 ]
+ [104.92065 ]
+ [106.244354]
+ [107.58022 ]
+ [108.92831 ]
+ [110.28864 ]]
+time taken(s) :  13.253158330917358
 '''
