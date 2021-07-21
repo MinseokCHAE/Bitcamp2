@@ -20,12 +20,11 @@ def split_x(dataset, size):
         aaa.append(subset)
     return np.array(aaa)
 dataset = split_x(x_data, 6)
-predset = split_x(x_pred, 5)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
 # print(x.shape, y.shape)
-x_pred = predset[:, :5] # (6, 5)
+x_pred = split_x(x_pred, 5) # (6, 5)
 # print(x_pred, x_pred.shape)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=66) 
@@ -33,6 +32,7 @@ scaler = MinMaxScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
+x_pred = scaler.transform(x_pred)
 x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
 x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 x_pred = x_pred.reshape(x_pred.shape[0], x_pred.shape[1], 1)
@@ -49,7 +49,7 @@ output = Dense(1, activation='relu')(s)
 model = Model(inputs=input, outputs=output)
 
 #3. Compiling, Training
-es = EarlyStopping(monitor='val_loss', patience=32, mode='min', verbose=1)
+es = EarlyStopping(monitor='val_loss', patience=64, mode='min', verbose=1)
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
 model.fit(x_train, y_train, epochs=128, batch_size=16, validation_split=0.05, callbacks=[es])
@@ -71,14 +71,14 @@ print('pred : ', result)
 print('time taken(s) : ', end_time)
 
 '''
-mse :  0.5017799735069275
-rmse :  0.7083643060714057
-R2 score =  0.9991907135932097
-pred :  [[16050.24 ]
- [16189.527]
- [16329.202]
- [16469.258]
- [16609.684]
- [16750.473]]
-time taken(s) :  13.544294118881226
+mse :  0.5144292116165161
+rmse :  0.7172371922877361
+R2 score =  0.999170312569404
+pred :  [[103.60905 ]
+ [104.92065 ]
+ [106.244354]
+ [107.58022 ]
+ [108.92831 ]
+ [110.28864 ]]
+time taken(s) :  13.253158330917358
 '''
