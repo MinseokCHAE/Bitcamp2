@@ -24,10 +24,17 @@ predset = split_x(x_pred, 5)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
+print(x, y)
 # print(x.shape, y.shape)
-x_pred = predset[:, :5] # (6, 5)
+x_pred = predset[:, :-1] # (4, 5)
 # print(x_pred, x_pred.shape)
-
+'''
+[[ 96  97  98  99 100]
+ [ 97  98  99 100 101]
+ [ 98  99 100 101 102]
+ [ 99 100 101 102 103]]
+ '''
+'''
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=66) 
 scaler = MinMaxScaler()
 scaler.fit(x_train)
@@ -70,15 +77,13 @@ print('R2 score = ', r2)
 print('pred : ', result)
 print('time taken(s) : ', end_time)
 
-'''
-mse :  0.5017799735069275
-rmse :  0.7083643060714057
-R2 score =  0.9991907135932097
-pred :  [[16050.24 ]
- [16189.527]
- [16329.202]
- [16469.258]
- [16609.684]
- [16750.473]]
-time taken(s) :  13.544294118881226
+
+mse :  1.4399133920669556
+rmse :  1.1999639296316864
+R2 score =  0.9976776627391208
+pred :  [[54016.992]
+ [54569.36 ]
+ [55121.8  ]
+ [55674.332]]
+time taken(s) :  13.35883092880249
 '''

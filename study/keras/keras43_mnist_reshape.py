@@ -31,17 +31,21 @@ y_test = to_categorical(y_test)
 # y_test = onehot_encoder.fit_transform(y_test).toarray()
 
 #2. modeling
+from tensorflow.keras.layers import Reshape # 모델링과정에서도 reshape가능
 input = Input(shape=(28, 28))
-x = Dense(8, activation='relu')(input)
-x = Flatten()(x)    # Dense 는 차원상관없이 받을수있음, 이후 output에 맞게 Flatten으로 펼쳐주면됨
-x = Dense(8, activation='relu')(x)
-x = Dense(16, activation='relu')(x)
-x = Dense(16, activation='relu')(x)
-x = Dense(4, activation='relu')(x)
-output = Dense(10, activation='softmax')(x)
+x = Dense(10, activation='relu')(input) # (N, 28, 10)
+x = Flatten()(x)    # (N, 280)
+x = Dense(784)(x)   # (N, 784)
+x = Reshape((28, 28, 1))(x) # (N, 28, 28, 1)
+x = Conv2D(64, (2,2))(x)    # (None, 27, 27, 64)
+x = MaxPooling2D()(x)   # (None, 13, 13, 64)
+x = Flatten()(x)    # (None, 10816) 
+output = Dense(10, activation='softmax')(x)     # (None, 10)
 
 model = Model(inputs=input, outputs=output)
+model.summary()
 
+'''
 #3. compiling, training
 es = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1)
 model.compile(loss='categorical_crossentropy', optimizer='adam', 
@@ -82,7 +86,7 @@ plt.legend(['acc', 'val_acc'])
 
 plt.show()
 
-'''
+
 loss =  0.715210497379303
 accuracy =  0.7595000267028809
 time taken(s) :  118.75079011917114
