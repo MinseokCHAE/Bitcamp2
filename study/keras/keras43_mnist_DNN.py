@@ -32,7 +32,8 @@ y_test = to_categorical(y_test)
 
 #2. modeling
 input = Input(shape=(28, 28))
-x = LSTM(8, activation='relu')(input)
+x = Flatten()(input)
+x = Dense(8, activation='relu')(x)
 x = Dense(16, activation='relu')(x)
 x = Dense(16, activation='relu')(x)
 x = Dense(4, activation='relu')(x)

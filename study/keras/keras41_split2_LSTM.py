@@ -25,8 +25,8 @@ predset = split_x(x_pred, size)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
-x_pred = predset[:, :-1] # (4, 5)
-# print(x_pred.shape)
+x_pred = predset[:, :5] # (4, 5)
+# print(x_pred, x_pred.shape)
 '''
 [[ 96  97  98  99 100]
  [ 97  98  99 100 101]
@@ -43,6 +43,7 @@ x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
 x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 
 x_pred = x_pred.reshape(4, 5, 1)
+
 
 #2. Modeling
 input = Input(shape=(5, 1))
