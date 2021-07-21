@@ -31,6 +31,7 @@ model = Model(inputs=input, outputs=output)
 
 #3. compiling, training
 from tensorflow.keras.callbacks import ModelCheckpoint
+'''
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto',
                                         filepath='./_save/MCP/keras47_MCP.hdf5')
 es = EarlyStopping(monitor='val_loss', patience=64, mode='min', verbose=1)
@@ -39,6 +40,8 @@ start_time = time.time()
 hist = model.fit(x_train, y_train, epochs=128, batch_size=8, 
                             validation_split=0.05, callbacks=[es, cp])
 end_time = time.time() - start_time
+'''
+model = load_model('./_save/MCP/keras47_MCP.hdf5')
 
 #4. evaluating, prediction
 loss = model.evaluate(x_test, y_test, batch_size=64)
