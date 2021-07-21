@@ -25,8 +25,8 @@ predset = split_x(x_pred, size)
 
 x = dataset[:, :5] # (95, 5) 
 y = dataset[:, 5] # (95,)
-x_pred = predset[:, :5] # (4, 5)
-print(x_pred)
+x_pred = predset[:, :-1] # (4, 5)
+# print(x_pred.shape)
 '''
 [[ 96  97  98  99 100]
  [ 97  98  99 100 101]
@@ -64,12 +64,12 @@ end_time = time.time() - start_time
 
 #. Evaluating, Prediction
 mse = model.evaluate(x_test, y_test)
-y_predict = model.predict([x_test])
+y_predict = model.predict(x_test)
 def RMSE(y_test, y_predict):
     return np.sqrt(mean_squared_error(y_test, y_predict))
 rmse = RMSE(y_test, y_predict)
 r2 = r2_score(y_test, y_predict)
-result = model.predict([x_pred])
+result = model.predict(x_pred)
 
 print('mse : ', mse)
 print('rmse : ', rmse)
