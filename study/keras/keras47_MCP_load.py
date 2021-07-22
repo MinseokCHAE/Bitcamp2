@@ -20,6 +20,7 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. modeling
+'''
 input = Input(shape=(10, ))
 x = Dense(16, activation='relu')(input)
 x = Dense(32, activation='relu')(x)
@@ -31,7 +32,7 @@ model = Model(inputs=input, outputs=output)
 
 #3. compiling, training
 from tensorflow.keras.callbacks import ModelCheckpoint
-'''
+
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto',
                                         filepath='./_save/MCP/keras47_MCP.hdf5')
 es = EarlyStopping(monitor='val_loss', patience=64, mode='min', verbose=1)
