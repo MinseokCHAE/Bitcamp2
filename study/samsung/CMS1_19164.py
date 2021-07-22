@@ -24,16 +24,19 @@ datasets_samsung = datasets_samsung.dropna(axis=0)
 
 # 주가4종류 (시가,고가,저가,종가) 와 거래량의 수치차이가 크기때문에 따로 MinMaxScaling - samsung
 data1_ss = datasets_samsung.iloc[:, :-1] # 주가4종 추출
-data2_ss = datasets_samsung.iloc[:, -1:] # 거래량 추출
+data2_ss = datasets_samsung.iloc[:, -1:] # 거래량 추출 
 # print(data1_ss.head(), data2_ss.head())
 scaler = MinMaxScaler()
 scaler.fit(data1_ss)
-data1_ss = scaler.transform(data1_ss)
+data1_ss_scaled = scaler.transform(data1_ss) # scaled_ratio, bias를 구하기위해 naming 분리 (data1_ss 원본필요)
 scaler.fit(data2_ss)
 data2_ss = scaler.transform(data2_ss)
-# print(data1_ss, data2_ss)
-data_ss = np.concatenate((data1_ss, data2_ss), axis=1) # 병합 (주가4종 오른쪽 열에 거래량 추가)
+# print(data1_ss_scaled, data2_ss)
+data_ss = np.concatenate((data1_ss_scaled, data2_ss), axis=1) # 병합 (주가4종 오른쪽 열에 거래량 추가)
 # print(data_ss.shape) # (2602, 5)
+scaled_ratio = np.max(data1_ss) - np.min(data1_ss) 
+scaled_bias = np.min(data1_ss)
+# print(scaled_ratio[3], scaled_bias[3]) # 종가에 해당하는 값(4번째 값)
 
 # 상동 - sk
 data1_sk = datasets_sk.iloc[:, :-1] 
@@ -47,6 +50,7 @@ data2_sk = scaler.transform(data2_sk)
 # print(data1_sk, data2_sk)
 data_sk = np.concatenate((data1_sk, data2_sk), axis=1) 
 # print(data_sk.shape) # (2602, 5)
+
 '''
 ************************Change Here************************
 '''
@@ -77,7 +81,7 @@ x1_pred = np.array(x1_pred)
 x2_pred = np.array(x2_pred)
 print(x1.shape, x2.shape, y.shape, x1_pred.shape, x2_pred.shape) # (2553, 50, 5) (2553, 50, 5) (2553, 1) (1, 50, 5) (1, 50, 5)
 
-x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(x1, x2, y, test_size=0.2, random_state=66)
+x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(x1, x2, y, test_size=0.2, random_state=9)
 
 #2. Modeling
 input1 = Input(shape=(50, 5))
@@ -88,7 +92,8 @@ d2 = LSTM(16, activation='relu')(input2)
 
 from tensorflow.keras.layers import concatenate
 m = concatenate([d1, d2])
-output = Dense(1, activation='relu')(m)
+d3 = Dense(4, activation='relu')(m)
+output = Dense(1, activation='relu')(d3)
 
 model = Model(inputs=[input1, input2], outputs=output)
 
@@ -104,20 +109,29 @@ cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbo
 es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
 
 start_time = time.time()
-model.fit([x1_train, x2_train], y_train, epochs=4, batch_size=16, verbose=1, validation_split=0.001, callbacks=[es, cp])
+model.fit([x1_train, x2_train], y_train, epochs=4, batch_size=4, verbose=1, validation_split=0.001, callbacks=[es, cp])
 end_time = time.time() - start_time
 
 #4. Evaluating, Prediction
 loss = model.evaluate([x1_test, x2_test], y_test)
 y_pred = model.predict([x1_pred, x2_pred])
-y_pred = scaler.inverse_transform(y_pred) # 가격(원) 확인을 위한 inverse scaling
+# y_pred = scaler.inverse_transform(y_pred) # 가격(원) 확인을 위한 inverse scaling
+y_pred = y_pred * scaled_ratio[3] + scaled_bias[3]
+'''
+scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
+위에서 scaling을 여러번함 & 특정 scaler.fit 정보만 뽑아 적용하는 방법 모름
+무지성 수식계산으로 땜빵
+-> 사후활용을 위해 scaler를 저장하는 기능 있다함 
+-> import joblib // joblib.dump(scaler, 'scaler.save') // scaler = joblib.load('scaler.save')
+배운것만 쓰라고 해서 안씀
+'''
 
 print('loss = ', loss)
 print("Tomorrow's closing price = ", y_pred)
 print('time taken(s) : ', end_time)
 
 '''
-loss =  0.13289673626422882
-Tomorrow's closing price =  [[842562.]]
-time taken(s) :  50.183152198791504
+loss =  1.2581316696014255e-05
+Tomorrow's closing price =  [[19164.8889333]]
+time taken(s) :  1823.1090631484985
 '''
