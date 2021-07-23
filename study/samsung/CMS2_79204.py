@@ -30,7 +30,7 @@ data2_ss = datasets_samsung.iloc[:, -1:] # 거래량 추출
 # print(data1_ss.head(), data2_ss.head())
 scaler = MinMaxScaler()
 scaler.fit(data1_ss)
-data1_ss_scaled = scaler.transform(data1_ss) # scaled_ratio, bias를 구하기위해 naming 분리 (data1_ss 원본필요)
+data1_ss_scaled = scaler.transform(data1_ss) # scaled_ratio 를 구하기위해 naming 분리 (data1_ss 원본필요)
 scaler.fit(data2_ss)
 data2_ss = scaler.transform(data2_ss)
 # print(data1_ss_scaled, data2_ss)
@@ -65,11 +65,11 @@ target = data_ss[:, [-5]] # 두번째 target =  '삼성' + '시가' = data_ss + 
 x1 = [] # 삼성
 x2 = [] # SK
 y = [] # target
-size = 50 # 데이터 slice 단위일수 설정 (단위일수만큼 끊어서 저장) -> 단위일수만큼의 데이터를 가지고 그 다음날의 주가 예측
+size = 50 # 데이터 slice 단위일수 설정
 for i in range(len(target) - size + 1):
-    x1.append(data_ss[i: (i + size) ])
-    x2.append(data_sk[i: (i + size) ])
-    y.append(target[i + (size - 1)]) 
+    x1.append(data_ss[i: (i + size) ]) # 단위일수만큼 끊어서 저장
+    x2.append(data_sk[i: (i + size) ]) # 단위일수만큼 끊어서 저장
+    y.append(target[i + (size - 2)]) # 단위일수 2일 후의 주가 훈련 및 예측
 # 설정한 단위일수 만큼 최근 데이터 slice -> y_predict 를 위한 x1_pred, x2_pred 생성
 x1_pred = [data_ss[len(data_ss) - size : ]]
 x2_pred = [data_sk[len(data_ss) - size : ]]
@@ -80,7 +80,7 @@ x2 = np.array(x2)
 y = np.array(y)
 x1_pred = np.array(x1_pred)
 x2_pred = np.array(x2_pred)
-print(x1.shape, x2.shape, y.shape, x1_pred.shape, x2_pred.shape) # (2553, 50, 5) (2553, 50, 5) (2553, 1) (1, 50, 5) (1, 50, 5)
+# print(x1.shape, x2.shape, y.shape, x1_pred.shape, x2_pred.shape) # (2553, 50, 5) (2553, 50, 5) (2553, 1) (1, 50, 5) (1, 50, 5)
 
 x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(x1, x2, y, test_size=0.2, random_state=9)
 
@@ -110,7 +110,7 @@ cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbo
 es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
 
 start_time = time.time()
-model.fit([x1_train, x2_train], y_train, epochs=4, batch_size=16, verbose=1, validation_split=0.001, callbacks=[es, cp])
+model.fit([x1_train, x2_train], y_train, epochs=8, batch_size=8, verbose=1, validation_split=0.001, callbacks=[es, cp])
 end_time = time.time() - start_time
 
 #4. Evaluating, Prediction
@@ -128,11 +128,11 @@ scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
 '''
 
 print('loss = ', loss)
-print("Tomorrow's closing price = ", y_pred)
+print("2일 후 삼성 시가 = ", y_pred)
 print('time taken(s) : ', end_time)
 
 '''
-loss =  0.0005040177493356168
-Tomorrow's closing price =  [[78157.14453578]]
-time taken(s) :  136.31254935264587
+loss =  5.074197906651534e-05
+2일 후 삼성 시가 =  [[79204.71556664]]
+time taken(s) :  486.7192060947418
 '''
