@@ -36,7 +36,7 @@ data_ss = np.concatenate((data1_ss_scaled, data2_ss), axis=1) # 병합 (주가4�
 # print(data_ss.shape) # (2602, 5)
 scaled_ratio = np.max(data1_ss) - np.min(data1_ss) 
 scaled_bias = np.min(data1_ss)
-# print(scaled_ratio[3], scaled_bias[3]) # 종가에 해당하는 값(4번째 값)
+# print(scaled_ratio[0], scaled_bias[0]) # 시가에 해당하는 값(1번째 값)
 
 # 상동 - sk
 data1_sk = datasets_sk.iloc[:, :-1] 
@@ -54,7 +54,7 @@ data_sk = np.concatenate((data1_sk, data2_sk), axis=1)
 '''
 ************************Change Here************************
 '''
-target = data_ss[:, [-2]] # 첫번째 target =  '삼성' + '종가' = data_ss + 뒤에서 2번째 열 
+target = data_ss[:, [-5]] # 두번째 target =  '삼성' + '시가' = data_ss + 뒤에서 5번째 열 
 # print(target.shape) # (2602, 1)
 '''
 ************************Change Here************************
@@ -104,19 +104,19 @@ date = datetime.datetime.now()
 date_time = date.strftime('%m%d_%H%M')
 path = './_save/MCP/'
 info = '{epoch:02d}_{val_loss:.4f}'
-filepath = ''.join([path, 'CMS1_12345', '_', date_time, '_', info, '.hdf5'])
+filepath = ''.join([path, 'CMS2_12345', '_', date_time, '_', info, '.hdf5'])
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbose=1, filepath=filepath)
 es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
 
 start_time = time.time()
-model.fit([x1_train, x2_train], y_train, epochs=16, batch_size=8, verbose=1, validation_split=0.001, callbacks=[es, cp])
+model.fit([x1_train, x2_train], y_train, epochs=8, batch_size=4, verbose=1, validation_split=0.001, callbacks=[es, cp])
 end_time = time.time() - start_time
 
 #4. Evaluating, Prediction
 loss = model.evaluate([x1_test, x2_test], y_test)
 y_pred = model.predict([x1_pred, x2_pred])
 # y_pred = scaler.inverse_transform(y_pred) # 가격(원) 확인을 위한 inverse scaling
-y_pred = y_pred * scaled_ratio[3] + scaled_bias[3]
+y_pred = y_pred * scaled_ratio[0] + scaled_bias[0]
 '''
 scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
 위에서 scaling을 여러번함 & 특정 scaler.fit 정보만 뽑아 적용하는 방법 모름
@@ -131,7 +131,7 @@ print("Tomorrow's closing price = ", y_pred)
 print('time taken(s) : ', end_time)
 
 '''
-loss =  9.271289309253916e-05
-Tomorrow's closing price =  [[19187.96054423]]
-time taken(s) :  267.97529006004333
+loss =  4.1048442653845996e-05
+Tomorrow's closing price =  [[18810.97181305]]
+time taken(s) :  727.0780713558197
 '''
