@@ -108,7 +108,7 @@ cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbo
 es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
 
 start_time = time.time()
-model.fit([x1_train, x2_train], y_train, epochs=8, batch_size=4, verbose=1, validation_split=0.001, callbacks=[es, cp])
+model.fit([x1_train, x2_train], y_train, epochs=4, batch_size=4, verbose=1, validation_split=0.001, callbacks=[es, cp])
 end_time = time.time() - start_time
 
 #4. Evaluating, Prediction

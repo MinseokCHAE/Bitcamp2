@@ -115,7 +115,7 @@ end_time = time.time() - start_time
 loss = model.evaluate([x1_test, x2_test], y_test)
 y_pred = model.predict([x1_pred, x2_pred])
 # y_pred = scaler.inverse_transform(y_pred) # 가격(원) 확인을 위한 inverse scaling
-y_pred = y_pred * scaled_ratio[3] + scaled_bias[3]
+y_pred = y_pred * scaled_ratio[3] + np.min(data1_ss)[3]
 '''
 scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
 위에서 scaling을 여러번함 & 특정 scaler.fit 정보만 뽑아 적용하는 방법 모름
