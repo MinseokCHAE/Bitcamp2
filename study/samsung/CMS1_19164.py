@@ -35,8 +35,7 @@ data2_ss = scaler.transform(data2_ss)
 data_ss = np.concatenate((data1_ss_scaled, data2_ss), axis=1) # 병합 (주가4종 오른쪽 열에 거래량 추가)
 # print(data_ss.shape) # (2602, 5)
 scaled_ratio = np.max(data1_ss) - np.min(data1_ss) 
-scaled_bias = np.min(data1_ss)
-# print(scaled_ratio[3], scaled_bias[3]) # 종가에 해당하는 값(4번째 값)
+# print(scaled_ratio[3], np.min(data1_ss) [3]) # 종가에 해당하는 값(4번째 값)
 
 # 상동 - sk
 data1_sk = datasets_sk.iloc[:, :-1] 

@@ -35,8 +35,7 @@ data2_ss = scaler.transform(data2_ss)
 data_ss = np.concatenate((data1_ss_scaled, data2_ss), axis=1) # 병합 (주가4종 오른쪽 열에 거래량 추가)
 # print(data_ss.shape) # (2602, 5)
 scaled_ratio = np.max(data1_ss) - np.min(data1_ss) 
-scaled_bias = np.min(data1_ss)
-# print(scaled_ratio[0], scaled_bias[0]) # 시가에 해당하는 값(1번째 값)
+# print(scaled_ratio[0], np.min(data1_ss)[0] ) # 시가에 해당하는 값(1번째 값)
 
 # 상동 - sk
 data1_sk = datasets_sk.iloc[:, :-1] 
@@ -116,7 +115,7 @@ end_time = time.time() - start_time
 loss = model.evaluate([x1_test, x2_test], y_test)
 y_pred = model.predict([x1_pred, x2_pred])
 # y_pred = scaler.inverse_transform(y_pred) # 가격(원) 확인을 위한 inverse scaling
-y_pred = y_pred * scaled_ratio[0] + scaled_bias[0]
+y_pred = y_pred * scaled_ratio[0] + np.min(data1_ss)[0]
 '''
 scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
 위에서 scaling을 여러번함 & 특정 scaler.fit 정보만 뽑아 적용하는 방법 모름
