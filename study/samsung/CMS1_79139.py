@@ -122,7 +122,7 @@ y_pred = y_pred * scaled_ratio[3] + np.min(data1_ss)[3]
 scaler.inverse_transform을 할때 data1_ss 의 scaling 정보가 필요
 위에서 scaling을 여러번함 & 특정 scaler.fit 정보만 뽑아 적용하는 방법 모름
 무지성 수식계산으로 땜빵
--> 사후활용을 위해 scaler를 저장하는 기능 있다함 
+-> 사후활용을 위해 scaler를 저장하는 기능 있다고함 
 -> import joblib // joblib.dump(scaler, 'scaler.save') // scaler = joblib.load('scaler.save')
 배운것만 쓰라고 해서 안씀
 '''
