@@ -1,6 +1,7 @@
 import time
 import datetime
 import numpy as np
+from numpy import argmax
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer, OneHotEncoder
@@ -24,27 +25,35 @@ datasets_train = datasets_train.dropna(axis=0)
 datasets_test = datasets_test.dropna(axis=0)
 # print(datasets_train.shape, datasets_test.shape)    # (45654, 3) (9131, 2)
 
-# x, y 분류
+# x, y, x_pred 분류
 x = datasets_train.iloc[:, -2]
 y = datasets_train.iloc[:, -1]
-# print(x.head(), y.head())
+x_pred = datasets_test.iloc[:, -1]
+# print(x.head(), y.head(), x_pred.head())
 
-# x 토큰화
+# x, x_pred 토큰화 및 sequence화
 token = Tokenizer()
 token.fit_on_texts(x)
 x = token.texts_to_sequences(x)
-# print(x)
+x_pred = token.texts_to_sequences(x_pred)
+# print(x, x_pred)
 
-# x padding
+# x, x_pred padding
 max_len1 = max(len(i) for i in x)
 avg_len1 = sum(map(len, x)) / len(x)
-# print(max_len1) # 13
-# print(avg_len1) # 6.623954089455469
+max_len2 = max(len(i) for i in x_pred)
+avg_len2 = sum(map(len, x_pred)) / len(x_pred)
+# print(max_len1, max_len2) # 13 11
+# print(avg_len1, avg_len2) # 6.623954089455469 5.127696856861242
 x = pad_sequences(x, padding='pre', maxlen=10)
-# print(x.shape) # (45654, 10)
-# print(np.unique(x)) # 0~101081
+x_pred = pad_sequences(x, padding='pre', maxlen=10)
+# print(x.shape, x_pred.shape) # (45654, 10) 
+'''
+shape가 똑같으면 안되는거 아님? ㅅㅂ
+'''
+# print(np.unique(x), np.unique(x_pred)) # 0~101081
 
-# y to_categorical
+# y to categorical
 # print(np.unique(y)) # 0~6
 y = to_categorical(y)
 # print(np.unique(y)) # 0, 1
@@ -82,27 +91,15 @@ print('acc = ', loss[1])
 print('time taken(s) = ', end_time)
 
 '''
-loss =  1.5092512369155884
-acc =  0.6861242055892944
-time taken(s) =  26.730732679367065
+loss =  1.3240760564804077
+acc =  0.72226482629776
+time taken(s) =  30.92211627960205
 '''
 
 #5. Prediction
-# x_pred preprocessing
-x_pred = datasets_test.iloc[:, -1]
-# print(x_pred.head())
-
-token.fit_on_texts(x_pred)
-x_pred = token.texts_to_sequences(x_pred)
-# print(x_pred)
-
-max_len2 = max(len(i) for i in x_pred)
-avg_len2 = sum(map(len, x_pred)) / len(x_pred)
-# print(max_len2) # 12
-# print(avg_len2) # 6.618004599715256
-x_pred = pad_sequences(x_pred, padding='pre', maxlen=10)
-# print(x_pred.shape) # (9131, 10)
-# print(np.unique(x_pred)) # 0~114215
-
 prediction = model.predict(x_pred)
-print(prediction.head())
+prediction = np.argmax(prediction, axis=1) # to_categorical 되돌리기
+# print(type.prediction) # numpy.ndarray
+
+file = pd.DataFrame(prediction)
+file.to_csv('../_data/test.csv', header=True, index=True)
