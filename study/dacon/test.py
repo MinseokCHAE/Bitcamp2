@@ -36,10 +36,10 @@ x = token.texts_to_sequences(x)
 # print(x)
 
 # x padding
-max_len = max(len(i) for i in x)
-avg_len = sum(map(len, x)) / len(x)
-# print(max_len) # 13
-# print(avg_len) # 6.623954089455469
+max_len1 = max(len(i) for i in x)
+avg_len1 = sum(map(len, x)) / len(x)
+# print(max_len1) # 13
+# print(avg_len1) # 6.623954089455469
 x = pad_sequences(x, padding='pre', maxlen=10)
 # print(x.shape) # (45654, 10)
 # print(np.unique(x)) # 0~101081
@@ -82,7 +82,27 @@ print('acc = ', loss[1])
 print('time taken(s) = ', end_time)
 
 '''
-
+loss =  1.5092512369155884
+acc =  0.6861242055892944
+time taken(s) =  26.730732679367065
 '''
 
 #5. Prediction
+# x_pred preprocessing
+x_pred = datasets_test.iloc[:, -1]
+# print(x_pred.head())
+
+token.fit_on_texts(x_pred)
+x_pred = token.texts_to_sequences(x_pred)
+# print(x_pred)
+
+max_len2 = max(len(i) for i in x_pred)
+avg_len2 = sum(map(len, x_pred)) / len(x_pred)
+# print(max_len2) # 12
+# print(avg_len2) # 6.618004599715256
+x_pred = pad_sequences(x_pred, padding='pre', maxlen=10)
+# print(x_pred.shape) # (9131, 10)
+# print(np.unique(x_pred)) # 0~114215
+
+prediction = model.predict(x_pred)
+print(prediction.head())
