@@ -98,5 +98,10 @@ prediction = model.predict(x_pred)
 prediction = np.argmax(prediction, axis=1) # to_categorical 되돌리기
 # print(type.prediction) # numpy.ndarray
 
-file = pd.DataFrame(prediction)
-file.to_csv('../_data/test.csv', header=True, index=True)
+# 제출파일형식 맞추기
+index = np.array([range(45654, 54785)])
+index = np.transpose(index)
+index = index.reshape(9131, )
+file = np.column_stack([index, prediction])
+file = pd.DataFrame(file)
+file.to_csv('../_data/test.csv', header=['index', 'topic_idx'], index=False)

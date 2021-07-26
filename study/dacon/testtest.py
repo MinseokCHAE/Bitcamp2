@@ -28,10 +28,16 @@ datasets_test = datasets_test.dropna(axis=0)
 # x, y, x_pred 분류
 x = datasets_train.iloc[:, -2]
 y = datasets_train.iloc[:, -1]
-# print(np.unique(y)) # 0~6
 
-y = to_categorical(y)
-# print(np.unique(y)) # 0, 1
+index = np.array([range(45654, 54785)])
+index = np.transpose(index)
+# print(index.shape)
+index = index.reshape(9131, )
+# print(index.shape)
+topic_idx = np.array([range(45654, 54785)])
+topic_idx = np.transpose(topic_idx)
+topic_idx = topic_idx.reshape(9131, )
+file = np.column_stack([index, topic_idx])
 
-y = np.argmax(y, axis=1)
-# print(np.unique(y)) # 0~6
+file = pd.DataFrame(file)
+file.to_csv('../_data/test.csv', header=['index', 'topic_idx'], index=False)
