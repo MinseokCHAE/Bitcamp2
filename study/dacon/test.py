@@ -46,12 +46,9 @@ avg_len2 = sum(map(len, x_pred)) / len(x_pred)
 # print(max_len1, max_len2) # 13 11
 # print(avg_len1, avg_len2) # 6.623954089455469 5.127696856861242
 x = pad_sequences(x, padding='pre', maxlen=10)
-x_pred = pad_sequences(x, padding='pre', maxlen=10)
-# print(x.shape, x_pred.shape) # (45654, 10) 
-'''
-shape가 똑같으면 안되는거 아님? ㅅㅂ
-'''
-# print(np.unique(x), np.unique(x_pred)) # 0~101081
+x_pred = pad_sequences(x_pred, padding='pre', maxlen=10)
+# print(x.shape, x_pred.shape) # (45654, 10) (9131, 10)
+# print(np.unique(x), np.unique(x_pred)) # 0~101081 // 동일기준(x)으로 fit,sequence 했기 때문에 같음
 
 # y to categorical
 # print(np.unique(y)) # 0~6
@@ -77,10 +74,10 @@ date_time = date.strftime('%m%d_%H%M')
 path = './_save/MCP/'
 info = '{epoch:02d}_{val_loss:.4f}'
 filepath = ''.join([path, 'test', '_', date_time, '_', info, '.hdf5'])
-es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
+es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=8)
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbose=1, filepath=filepath)
 start_time = time.time()
-model.fit(x_train, y_train, epochs=8, batch_size=256, verbose=1, validation_split=0.01, callbacks=[es, cp])
+model.fit(x_train, y_train, epochs=16, batch_size=128, verbose=1, validation_split=0.01, callbacks=[es, cp])
 end_time = time.time() - start_time
 
 #4. Evaluating
