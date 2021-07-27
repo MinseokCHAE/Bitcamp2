@@ -9,7 +9,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.datasets import imdb
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, Dense, LSTM
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 
 
 #1. Data Preprocessing
@@ -44,13 +44,14 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 date = datetime.datetime.now()
 date_time = date.strftime('%m%d_%H%M')
-path = './_save/MCP/'
+path = './_save/_mcp/'
 info = '{epoch:02d}_{val_loss:.4f}'
 filepath = ''.join([path, 'keras54_imdb', '_', date_time, '_', info, '.hdf5'])
 es = EarlyStopping(monitor='val_loss', restore_best_weights=False, mode='auto', verbose=1, patience=4)
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbose=1, filepath=filepath)
+tb = TensorBoard(log_dir='./_save/_graph', histogram_freq=0, write_graph=True, write_images=True)
 start_time = time.time()
-model.fit(x_train, y_train, epochs=8, batch_size=256, verbose=1, validation_split=0.01, callbacks=[es, cp])
+model.fit(x_train, y_train, epochs=4, batch_size=512, verbose=1, validation_split=0.01, callbacks=[es, cp, tb])
 end_time = time.time() - start_time
 
 #4. Evaluating, Prediction
