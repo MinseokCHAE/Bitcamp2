@@ -62,6 +62,10 @@ x_pred = pad_sequences(x_pred, padding='pre', maxlen=13)
 y = to_categorical(y)
 # print(np.unique(y)) # 0, 1
 
+# np.save('./_save/NPY/NTG_x.npy', arr=x)
+# np.save('./_save/NPY/NTG_y.npy', arr=y)
+# np.save('./_save/NPY/NTG_x_pred.npy', arr=x_pred)
+
 # x, y train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=21)
 
