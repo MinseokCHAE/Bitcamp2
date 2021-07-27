@@ -32,8 +32,8 @@ y_wine = wine.target
 (x_cifar100_train, y_cifar100_train), (x_cifar100_test, y_cifar100_test) = cifar100.load_data()
 
 # 필요한 데이터 loading
-x_data = np.load('./_save/NPY/keras55_x_iris.npy')
-y_data = np.load('./_save/NPY/keras55_y_iris.npy')
+x_data = np.load('./_save/_npy/keras55_x_iris.npy')
+y_data = np.load('./_save/_npy/keras55_y_iris.npy')
 
 # np.save('./_save/NPY/keras55_x_iris.npy', arr=x_iris)
 # np.save('./_save/NPY/keras55_y_iris.npy', arr=y_iris)

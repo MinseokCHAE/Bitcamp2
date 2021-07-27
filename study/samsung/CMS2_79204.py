@@ -103,7 +103,7 @@ model.compile(loss='mse', optimizer='adam')
 
 date = datetime.datetime.now()
 date_time = date.strftime('%m%d_%H%M')
-path = './_save/MCP/'
+path = './_save/_mcp/'
 info = '{epoch:02d}_{val_loss:.4f}'
 filepath = ''.join([path, 'CMS2_12345', '_', date_time, '_', info, '.hdf5'])
 cp = ModelCheckpoint(monitor='val_loss', save_best_only=True, mode='auto', verbose=1, filepath=filepath)
